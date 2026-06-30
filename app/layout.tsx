@@ -1,15 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import { NotificationProvider } from "@/zustand/notificationPtoviderClient";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const kuunari = localFont({
+  src: [
+    {
+      path: "../assests/Kuunari/fonts/aqui.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../assests/Kuunari/fonts/aqui2.otf",
+      weight: "400",
+      style: "italic",
+    },
+  ],
+  variable: "--font-kuunari",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -24,11 +31,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={`${kuunari.variable} h-full`}>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <NotificationProvider />
+      </body>
     </html>
   );
 }

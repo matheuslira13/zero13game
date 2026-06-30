@@ -1,5 +1,4 @@
 export const optionsNav = [
-  { name: "INÍCIO", href: "/" },
   { name: "CAMPEONATOS", href: "/campeonatos" },
   { name: "JOGOS", href: "/jogos" },
   { name: "NOTÍCIAS", href: "/noticias" },
