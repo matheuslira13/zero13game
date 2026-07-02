@@ -17,6 +17,7 @@ export type CampeonatoHome = {
 };
 
 export type NewsProps = {
+  id: string;
   data_noticia: string;
   imagem_url: string;
   subtitulo: string;

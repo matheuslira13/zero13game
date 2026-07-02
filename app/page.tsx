@@ -83,6 +83,7 @@ const Home = async () => {
             return (
               <Card
                 key={item.id}
+                id={item.id}
                 date={item.data_evento}
                 img={jogo?.imagem_url ?? "/bgBanner.png"}
                 limitTotal={String(item.numero_maximo_participantes)}
@@ -98,7 +99,7 @@ const Home = async () => {
         <div className="flex justify-between w-full px-8 md:px-24 my-4 items-end">
           <Title title="últimas notícias" color="#ffffff" />
 
-          <Button type="primary" href="/campeonatos">
+          <Button type="primary" href="/noticias">
             <h1 className="text-xl">Ver Todas</h1>
           </Button>
         </div>
@@ -111,6 +112,7 @@ const Home = async () => {
               data_noticia={item.data_noticia}
               imagem_url={item.imagem_url}
               titulo={item.titulo}
+              id={item.id}
             />
           ))}
         </div>
@@ -123,6 +125,7 @@ const Home = async () => {
             texto={featuredNews.texto}
             imagem_url={featuredNews.imagem_url}
             subtitulo={featuredNews.subtitulo}
+            id={featuredNews.id}
           />
 
           <div className="flex flex-col gap-4 overflow-y-scroll px-2">
@@ -132,6 +135,7 @@ const Home = async () => {
                 data_noticia={item.data_noticia}
                 imagem_url={item.imagem_url}
                 titulo={item.titulo}
+                id={item.id}
               />
             ))}
           </div>

@@ -4,13 +4,16 @@ import { optionsNav } from "./optionsNav";
 import { Button } from "../Button/Button";
 import { getCurrentCompetidor } from "@/lib/auth/current-user";
 import { MobileMenu } from "./MobileMenu";
+import { ProfileDropdown } from "./ProfileDropdown";
 
 export const Header = async () => {
   const competidor = await getCurrentCompetidor();
 
   return (
     <header className="fixed z-50 flex w-full items-center justify-between bg-black/50 px-4 py-2">
-      <Image src="/logo.png" alt="Zero13GameClub" width={100} height={32} />
+      <Link href="/" aria-label="Voltar para a home">
+        <Image src="/logo.png" alt="Zero13GameClub" width={100} height={32} />
+      </Link>
 
       <nav className="hidden min-[501px]:block">
         <ul className="flex items-center gap-4">
@@ -31,9 +34,10 @@ export const Header = async () => {
                 Olá, {competidor.apelido}
               </span>
 
-              <Button href="/minhas-inscricoes" type="primary">
-                Minhas inscrições
-              </Button>
+              <ProfileDropdown
+                apelido={competidor.apelido}
+                fotoUrl={competidor.foto_url}
+              />
             </>
           ) : (
             <>

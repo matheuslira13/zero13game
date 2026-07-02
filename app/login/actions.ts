@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export type LoginStateType = {
   error: string;
@@ -34,11 +35,21 @@ export const loginFunction = async (
     };
   }
   const user = loginData.user;
+
   if (!user) {
     return {
       error: "Nao foi possivel recuperar o usuario criado.",
       success: "",
     };
   }
+  redirect("/");
+};
+
+export const logoutFunction = async () => {
+  const supabase = await createClient();
+
+  await supabase.auth.signOut();
+
+  revalidatePath("/", "layout");
   redirect("/");
 };

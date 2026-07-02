@@ -47,6 +47,10 @@ export function MobileMenu({ competidor }: { competidor: Competidor }) {
                 <Button href="/minhas-inscricoes" type="primary">
                   Minhas inscrições
                 </Button>
+
+                <Button href="/perfil" type="secondary">
+                  Perfil
+                </Button>
               </>
             ) : (
               <>

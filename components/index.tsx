@@ -6,6 +6,7 @@ import { Title } from "./Title/Title";
 import { NewReference } from "./NewsReference/NewsReference";
 import { News } from "./NewsReference/News";
 import { Footer } from "./Footer/Footer";
+import { Avatar } from "./Avatar/Avatar";
 
 export {
   Header,
@@ -15,5 +16,6 @@ export {
   Title,
   NewReference,
   News,
+  Avatar,
   Footer,
 };

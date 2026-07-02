@@ -63,7 +63,7 @@ export const LoginForm = () => {
 
       <div className="flex justify-end">
         <Link
-          href="/esqueci-senha"
+          href="/esqueceu-senha"
           className="text-sm font-bold uppercase text-[#f4c11a] hover:text-white"
         >
           Esqueci a senha

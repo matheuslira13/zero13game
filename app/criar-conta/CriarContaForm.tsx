@@ -21,6 +21,7 @@ export const CriarContaForm = () => {
   const [email, setEmail] = useState("");
   const [apelido, setApelido] = useState("");
   const [fotoError, setFotoError] = useState("");
+  const [alerta, setAlerta] = useState(false);
   const showNotification = useNotificationStore(
     (state) => state.showNotification
   );
