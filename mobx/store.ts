@@ -1,31 +1,31 @@
 import { makeAutoObservable } from "mobx";
 
-export type Tournament = {
-  id: string;
-  title: string;
-  game: string;
-  date: string;
-  maxPlayers: number;
-  players: number;
+export type UserData = {
+  nome: string;
+  foto_url: string;
+  telefone: string;
+  apelido: string;
+  criado_em: string;
 };
 
-export class TournamentStore {
-  tournaments: Tournament[] = [];
+export class UserDataStore {
+  userInfoDetails: UserData = {
+    nome: "",
+    foto_url: "",
+    telefone: "",
+    apelido: "",
+    criado_em: "",
+  };
   constructor() {
     makeAutoObservable(this);
   }
-  addTournament(tournament: Tournament) {
-    this.tournaments.push(tournament);
+
+  get userInfo() {
+    return this.userInfoDetails;
   }
-  removeTournament(id: string) {
-    this.tournaments = this.tournaments.filter((item) => item.id !== id);
-  }
-  get availableTournaments() {
-    return this.tournaments.filter((item) => item.players < item.maxPlayers);
-  }
-  get totalTournaments() {
-    return this.tournaments.length;
+  set userInfo(value: UserData) {
+    this.userInfoDetails = value;
   }
 }
 
-export const tournamentStore = new TournamentStore();
+export const tournamentStore = new UserDataStore();

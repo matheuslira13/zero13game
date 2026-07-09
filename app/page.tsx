@@ -11,18 +11,7 @@ import {
 } from "@/components";
 import { Card } from "@/components/Card/Card";
 import { CampeonatoHome, NewsProps } from "./types";
-
-function getJogo(campeonato: CampeonatoHome) {
-  if (Array.isArray(campeonato.jogos)) {
-    return campeonato.jogos[0] ?? null;
-  }
-
-  return campeonato.jogos;
-}
-
-function getInscricoesCount(campeonato: CampeonatoHome) {
-  return campeonato.inscricoes?.[0]?.count ?? 0;
-}
+import { CampeonatoClass, CampeonatoPublico } from "@/class/Campeonato";
 
 const Home = async () => {
   const supabase = await createClient();
@@ -78,17 +67,22 @@ const Home = async () => {
         </div>
         <div className="flex w-[80vw] overflow-x-scroll mt-4">
           {listaCampeonatos.map((item) => {
-            const jogo = getJogo(item);
-
+            const campeonatoModel = new CampeonatoClass(
+              item as CampeonatoPublico
+            );
+            const jogo = campeonatoModel.getJogo();
+            //continuar depois , observa que a classe tem muitos atributos que vc pode usar aqui e depois vamos fazer outras requisuicao com classe ao inves de funcaos
             return (
               <Card
                 key={item.id}
                 id={item.id}
                 date={item.data_evento}
                 img={jogo?.imagem_url ?? "/bgBanner.png"}
-                limitTotal={String(item.numero_maximo_participantes)}
+                limitTotal={campeonatoModel.numeroMaximoParticipantes}
                 name={item.titulo}
-                numberOfparticipant={String(getInscricoesCount(item))}
+                numberOfparticipant={String(
+                  campeonatoModel.getInscricoesCount()
+                )}
                 type="presencial"
               />
             );

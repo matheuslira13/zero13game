@@ -31,3 +31,21 @@ export function getJogo(campeonato: CampeonatoPublico) {
 export function getInscricoesCount(campeonato: CampeonatoPublico) {
   return campeonato.inscricoes?.[0]?.count ?? 0;
 }
+
+export class Campeonato {
+  private data: CampeonatoPublico;
+
+  constructor(data: CampeonatoPublico) {
+    this.data = data;
+  }
+  getJogo() {
+    if (Array.isArray(this.data.jogos)) {
+      return this.data.jogos[0] ?? null;
+    }
+
+    return this.data.jogos;
+  }
+  getInscricoesCount() {
+    return this.data.inscricoes?.[0]?.count ?? 0;
+  }
+}

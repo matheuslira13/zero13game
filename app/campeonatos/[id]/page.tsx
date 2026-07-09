@@ -48,10 +48,10 @@ export default async function CampeonatoDetalhePage({
   const vagasEsgotadas = inscritos >= campeonato.numero_maximo_participantes;
 
   return (
-    <div className="min-h-screen bg-[#000a24] text-white">
+    <div className="min-h-screen bg-[#000a24] text-white ">
       <Header />
 
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 pb-16 pt-28 md:px-8">
+      <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 pb-16 pt-28 md:px-8 ">
         <Link
           href="/campeonatos"
           className="w-fit text-sm font-black uppercase text-[#f4c11a] hover:text-white"
