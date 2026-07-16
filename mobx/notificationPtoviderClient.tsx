@@ -1,9 +1,10 @@
 "use client";
 
-import { useNotificationStore } from "./store";
+import { messagePopUpFront } from "@/mobx/store";
+import { observer } from "mobx-react-lite";
 
-export function NotificationProvider() {
-  const { notification, clearNotification } = useNotificationStore();
+export const NotificationProvider = observer(() => {
+  const notification = messagePopUpFront.messageStore;
 
   if (!notification) return null;
 
@@ -19,7 +20,7 @@ export function NotificationProvider() {
       className={`fixed flex flex-col  items-end right-4 top-4 z-50 rounded-lg ${bgColor} px-4 py-3 text-white shadow-lg`}
     >
       <button
-        onClick={clearNotification}
+        onClick={() => messagePopUpFront.clearMessageStore()}
         className="mt-2 text-sm font-bold underline"
       >
         <svg
@@ -42,4 +43,4 @@ export function NotificationProvider() {
       <p>{notification.message}</p>
     </div>
   );
-}
+});

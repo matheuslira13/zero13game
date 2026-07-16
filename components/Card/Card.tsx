@@ -1,4 +1,4 @@
-import { formatDate } from "@/services/date";
+import { formatDateWithYearAndTime } from "@/services/date";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -6,7 +6,7 @@ type CardProps = {
   type: "presencial" | "online";
   date: number | string;
   name: string;
-  limitTotal: string;
+  limitTotal: number;
   numberOfparticipant: string;
   img: string;
   id: string;
@@ -22,25 +22,22 @@ export const Card = ({
   id,
 }: CardProps) => {
   return (
-    <Link href={`/campeonatos/${id}`} className="cursor-pointer">
-      <div className="border border-gray-700 mt-2 mx-5 min-w-1xs md:min-w-3xs">
+    <Link
+      href={`/campeonatos/${id}`}
+      className="mx-3 mt-2 flex h-[370px] w-[260px] shrink-0 cursor-pointer flex-col border border-gray-700 bg-black/60 transition hover:border-[#f4c11a] md:mx-5 md:w-[300px]"
+    >
         <Image
           src={img}
           width={300}
-          height={100}
-          className="
-          w-[200px]
-          md:w-[300px]
-          h-auto
-          object-cover
-        "
-          alt="Card"
+          height={170}
+          className="h-[150px] w-full object-cover md:h-[170px]"
+          alt={name}
         />
-        <div className="p-4 bg-black/60 cursor-pointer">
-          <h1 className="text-[#ffffff] text-lg font-bold text-center border-t border-gray-700">
+        <div className="flex min-h-0 flex-1 flex-col p-4">
+          <h1 className="line-clamp-2 min-h-12 border-t border-gray-700 pt-3 text-center text-lg font-bold leading-6 text-[#ffffff]">
             {name}
           </h1>
-          <div className="flex flex-col">
+          <div className="mt-3 flex flex-1 flex-col">
             <div className="flex">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +65,9 @@ export const Card = ({
                 <path d="M10.01 17h.005" />
               </svg>
               <div className="flex px-2 ">
-                <h2 className="text-[#ffffff]">{formatDate(date)}</h2>
+                <h2 className="text-[#ffffff]">
+                  {formatDateWithYearAndTime(date)}
+                </h2>
               </div>
             </div>
             <div className="flex">
@@ -145,7 +144,7 @@ export const Card = ({
                 </>
               )}
             </div>
-            <div className="flex justify-between pt-2">
+            <div className="mt-auto flex justify-between pt-2">
               <h2 className="text-[#f4c11a]">VER DETALHES</h2>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +166,6 @@ export const Card = ({
             </div>
           </div>
         </div>
-      </div>
     </Link>
   );
 };

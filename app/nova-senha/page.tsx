@@ -1,6 +1,15 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { NovaSenhaForm } from "./NovaSenhaForm";
+
+export const metadata: Metadata = {
+  title: "Nova senha",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 const NovaSenhaPage = () => {
   return (

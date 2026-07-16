@@ -1,62 +1,73 @@
 "use client";
+
 import Link from "next/link";
 import { useActionState, useEffect } from "react";
-import { loginFunction, LoginStateType } from "./actions";
-import { useNotificationStore } from "@/zustand/store";
+import { loginFunction, type LoginStateType } from "./actions";
+import { messagePopUpFront } from "@/mobx/store";
+
+const initialState: LoginStateType = {
+  error: "",
+  success: "",
+};
 
 export const LoginForm = () => {
-  const initialState: LoginStateType = {
-    error: "",
-    success: "",
-  };
   const [state, formAction, pending] = useActionState(
     loginFunction,
     initialState
   );
-  const showNotification = useNotificationStore(
-    (state) => state.showNotification
-  );
 
   useEffect(() => {
     if (state.error) {
-      showNotification({
+      messagePopUpFront.setMessageStore({
         message: state.error,
         type: "error",
       });
+
+      return;
     }
 
     if (state.success) {
-      showNotification({
+      messagePopUpFront.setMessageStore({
         message: state.success,
         type: "success",
       });
     }
-  }, [showNotification, state.error, state.success]);
+  }, [state.error, state.success]);
 
   return (
     <form action={formAction} className="mt-8 flex flex-col gap-4">
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-bold uppercase text-[#f4c11a]">
+        <label
+          htmlFor="email"
+          className="text-sm font-bold uppercase text-[#f4c11a]"
+        >
           E-mail
         </label>
 
         <input
+          id="email"
           name="email"
           type="email"
           placeholder="seu@email.com"
+          required
           className="border border-[#394c7d] bg-[#001131] px-4 py-3 text-white outline-none placeholder:text-white/40 focus:border-[#f4c11a]"
         />
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-bold uppercase text-[#f4c11a]">
+        <label
+          htmlFor="senha"
+          className="text-sm font-bold uppercase text-[#f4c11a]"
+        >
           Senha
         </label>
 
         <input
+          id="senha"
           name="senha"
           type="password"
           placeholder="Sua senha"
+          required
           className="border border-[#394c7d] bg-[#001131] px-4 py-3 text-white outline-none placeholder:text-white/40 focus:border-[#f4c11a]"
         />
       </div>
@@ -72,9 +83,10 @@ export const LoginForm = () => {
 
       <button
         type="submit"
-        className="mt-4 bg-[#f4c11a] px-6 py-3 font-black uppercase text-[#001131] transition hover:brightness-90"
+        disabled={pending}
+        className="mt-4 bg-[#f4c11a] px-6 py-3 font-black uppercase text-[#001131] transition hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        Entrar
+        {pending ? "Entrando..." : "Entrar"}
       </button>
     </form>
   );

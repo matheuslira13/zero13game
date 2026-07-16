@@ -1,6 +1,12 @@
 import { Footer, Header } from "@/components";
 import { createClient } from "@/lib/supabase/server";
+import {
+  absoluteUrl,
+  siteName,
+  truncateDescription,
+} from "@/lib/seo";
 import { formatDate } from "@/services/date";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -25,18 +31,76 @@ function splitParagraphs(texto: string) {
     .filter(Boolean);
 }
 
+async function getNoticia(id: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("noticias")
+    .select("id,titulo,subtitulo,texto,imagem_url,data_noticia")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return data as Noticia;
+}
+
+export async function generateMetadata({
+  params,
+}: NoticiaDetalhePageProps): Promise<Metadata> {
+  const { id } = await params;
+  const noticia = await getNoticia(id);
+
+  if (!noticia) {
+    return {
+      title: "Notícia não encontrada",
+    };
+  }
+
+  const description = truncateDescription(
+    noticia.subtitulo ?? noticia.texto,
+  );
+  const imageUrl = noticia.imagem_url ?? absoluteUrl("/bgBanner.png");
+
+  return {
+    title: noticia.titulo,
+    description,
+    alternates: {
+      canonical: `/noticias/${noticia.id}`,
+    },
+    openGraph: {
+      type: "article",
+      title: noticia.titulo,
+      description,
+      url: absoluteUrl(`/noticias/${noticia.id}`),
+      publishedTime: noticia.data_noticia,
+      siteName,
+      images: [
+        {
+          url: imageUrl,
+          alt: noticia.titulo,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: noticia.titulo,
+      description,
+      images: [imageUrl],
+    },
+  };
+}
+
 export default async function NoticiaDetalhePage({
   params,
 }: NoticiaDetalhePageProps) {
   const { id } = await params;
   const supabase = await createClient();
 
-  const [{ data, error }, { data: relacionadasData }] = await Promise.all([
-    supabase
-      .from("noticias")
-      .select("id,titulo,subtitulo,texto,imagem_url,data_noticia")
-      .eq("id", id)
-      .maybeSingle(),
+  const [noticia, { data: relacionadasData }] = await Promise.all([
+    getNoticia(id),
     supabase
       .from("noticias")
       .select("id,titulo,subtitulo,texto,imagem_url,data_noticia")
@@ -45,17 +109,45 @@ export default async function NoticiaDetalhePage({
       .limit(3),
   ]);
 
-  if (error || !data) {
+  if (!noticia) {
     notFound();
   }
 
-  const noticia = data as Noticia;
   const relacionadas = (relacionadasData ?? []) as Noticia[];
   const imageUrl = noticia.imagem_url ?? "/bgBanner.png";
   const paragraphs = splitParagraphs(noticia.texto);
+  const newsStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: noticia.titulo,
+    description: truncateDescription(noticia.subtitulo ?? noticia.texto),
+    image: [noticia.imagem_url ?? absoluteUrl("/bgBanner.png")],
+    datePublished: noticia.data_noticia,
+    dateModified: noticia.data_noticia,
+    author: {
+      "@type": "Organization",
+      name: siteName,
+      url: absoluteUrl("/"),
+    },
+    publisher: {
+      "@type": "Organization",
+      name: siteName,
+      logo: {
+        "@type": "ImageObject",
+        url: absoluteUrl("/logo.png"),
+      },
+    },
+    mainEntityOfPage: absoluteUrl(`/noticias/${noticia.id}`),
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-[#000a24] text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(newsStructuredData),
+        }}
+      />
       <Header />
 
       <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-4 pb-16 pt-28 md:px-8">

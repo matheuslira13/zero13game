@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { criarConta, type CriarContaState } from "./actions";
 import { maskPhone } from "@/util/mask/phone";
-import { useNotificationStore } from "@/zustand/store";
+import { messagePopUpFront } from "@/mobx/store";
 
 const initialState: CriarContaState = {
   error: "",
@@ -22,9 +22,7 @@ export const CriarContaForm = () => {
   const [apelido, setApelido] = useState("");
   const [fotoError, setFotoError] = useState("");
   const [alerta, setAlerta] = useState(false);
-  const showNotification = useNotificationStore(
-    (state) => state.showNotification
-  );
+
   const emailValido = !email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const formularioValido =
     nome.trim() !== "" &&
@@ -47,7 +45,7 @@ export const CriarContaForm = () => {
 
       setFotoError(message);
       event.target.value = "";
-      showNotification({
+      messagePopUpFront.setMessageStore({
         message,
         type: "error",
       });
@@ -59,19 +57,19 @@ export const CriarContaForm = () => {
 
   useEffect(() => {
     if (state.error) {
-      showNotification({
+      messagePopUpFront.setMessageStore({
         message: state.error,
         type: "error",
       });
     }
 
     if (state.success) {
-      showNotification({
+      messagePopUpFront.setMessageStore({
         message: state.success,
         type: "success",
       });
     }
-  }, [showNotification, state.error, state.success]);
+  }, [messagePopUpFront.setMessageStore, state.error, state.success]);
 
   return (
     <form action={formAction} className="mt-2 flex flex-col gap-4">

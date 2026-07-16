@@ -3,6 +3,36 @@ import { createClient } from "@/lib/supabase/server";
 import { getCurrentCompetidor } from "@/lib/auth/current-user";
 import { CampeonatoCard } from "./CampeonatoCard";
 import { type CampeonatoPublico } from "./types";
+import type { Metadata } from "next";
+import {
+  absoluteUrl,
+  siteKeywords,
+  siteName,
+  truncateDescription,
+} from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Campeonatos gamer e torneios",
+  description: truncateDescription(
+    "Veja campeonatos gamer, torneios de jogos de luta, eventos presenciais e inscrições abertas da comunidade Zero13GameClub.",
+  ),
+  keywords: [
+    ...siteKeywords,
+    "campeonatos abertos",
+    "torneios de games",
+    "inscrição campeonato gamer",
+  ],
+  alternates: {
+    canonical: "/campeonatos",
+  },
+  openGraph: {
+    title: `Campeonatos gamer | ${siteName}`,
+    description:
+      "Calendário de campeonatos, torneios e eventos gamer da Zero13GameClub.",
+    url: absoluteUrl("/campeonatos"),
+    images: [absoluteUrl("/bgBanner.png")],
+  },
+};
 
 function splitCampeonatos(campeonatos: CampeonatoPublico[]) {
   const now = Date.now();

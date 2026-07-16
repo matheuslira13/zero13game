@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { CriarContaForm } from "./CriarContaForm";
+
+export const metadata: Metadata = {
+  title: "Criar conta gamer",
+  description:
+    "Crie sua conta gratuita na Zero13GameClub para participar de campeonatos gamer, torneios de jogos de luta e eventos da comunidade.",
+  alternates: {
+    canonical: "/criar-conta",
+  },
+};
 
 const CriarContaPage = async () => {
   return (

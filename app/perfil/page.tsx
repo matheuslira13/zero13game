@@ -1,8 +1,17 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PerfilForm } from "./PerfilForm";
+
+export const metadata: Metadata = {
+  title: "Perfil",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 const PerfilPage = async () => {
   const supabase = await createClient();

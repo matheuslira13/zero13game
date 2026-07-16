@@ -1,8 +1,17 @@
 import { Button } from "@/components";
+import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { LoginForm } from "./loginForm";
+
+export const metadata: Metadata = {
+  title: "Entrar",
+  description:
+    "Entre na sua conta Zero13GameClub para se inscrever em campeonatos gamer e acompanhar sua participação.",
+  alternates: {
+    canonical: "/login",
+  },
+};
 
 const LoginPage = async () => {
   const supabase = await createClient();

@@ -9,6 +9,11 @@ export type LoginStateType = {
   success: string;
 };
 
+export type LogoutStateType = {
+  error: string;
+  success: string;
+};
+
 export const loginFunction = async (
   _state: LoginStateType,
   formData: FormData
@@ -45,11 +50,28 @@ export const loginFunction = async (
   redirect("/");
 };
 
-export const logoutFunction = async () => {
+export const logoutFunction = async (
+  _state: LogoutStateType,
+  _formData: FormData,
+): Promise<LogoutStateType> => {
+  void _state;
+  void _formData;
+
   const supabase = await createClient();
 
-  await supabase.auth.signOut();
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    return {
+      error: `Nao foi possivel sair: ${error.message}`,
+      success: "",
+    };
+  }
 
   revalidatePath("/", "layout");
-  redirect("/");
+
+  return {
+    error: "",
+    success: "Sessao encerrada.",
+  };
 };

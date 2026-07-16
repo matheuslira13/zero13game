@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import type { Metadata } from "next";
 
 import {
   Banner,
@@ -12,10 +13,29 @@ import {
 import { Card } from "@/components/Card/Card";
 import { CampeonatoHome, NewsProps } from "./types";
 import { CampeonatoClass, CampeonatoPublico } from "@/class/Campeonato";
+import { UserStoreInitializer } from "@/components/UserStoreInitializer/UserStoreInitializer";
+import { getCurrentCompetidor } from "@/lib/auth/current-user";
+import { absoluteUrl, siteDescription, siteKeywords, siteName } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Portal gamer, notícias e campeonatos",
+  description: siteDescription,
+  keywords: siteKeywords,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: `${siteName} | Portal gamer, notícias e campeonatos`,
+    description: siteDescription,
+    url: absoluteUrl("/"),
+    images: [absoluteUrl("/bgBanner.png")],
+  },
+};
 
 const Home = async () => {
   const supabase = await createClient();
-
+  const competidor = await getCurrentCompetidor();
+  const now = new Date().toISOString();
   const [
     { data: campeonatos, error: campeonatosError },
     { data: noticias, error: noticiasError },
@@ -26,13 +46,20 @@ const Home = async () => {
         `
       id,
       titulo,
+      descricao,
+      local,
       data_evento,
       numero_maximo_participantes,
+      tipo,
+      status,
       jogos(nome, imagem_url),
       inscricoes(count)
     `
       )
-      .order("data_evento", { ascending: false }),
+      .eq("status", "disponivel")
+      .gte("data_evento", now)
+      .order("data_evento", { ascending: true })
+      .limit(10),
 
     supabase
       .from("noticias")
@@ -53,11 +80,11 @@ const Home = async () => {
   const reversedNews = [...noticiasData].reverse();
   const featuredNews = noticiasData[noticiasData.length - 1];
   const sideNews = noticiasData.slice(0, noticiasData.length - 1);
-  console.log(noticiasData);
   return (
     <div className="flex flex-col items-center font-sans ">
       <Header />
       <Banner />
+      <UserStoreInitializer user={competidor} />
       <div className="bg-[#001233] flex flex-col w-full items-center">
         <div className="flex justify-between w-full px-8 md:px-24 my-4 items-end ">
           <Title title="Campeonatos disponíveis" color="#ffffff" />

@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useActionState, useEffect, useState } from "react";
-import { useNotificationStore } from "@/zustand/store";
 import { atualizarPerfil, type PerfilState } from "./actions";
 import Link from "next/link";
+import { messagePopUpFront } from "@/mobx/store";
 
 type PerfilFormProps = {
   apelido: string;
@@ -26,9 +26,6 @@ export function PerfilForm({ apelido, fotoUrl }: PerfilFormProps) {
   const [novaSenha, setNovaSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [fotoError, setFotoError] = useState("");
-  const showNotification = useNotificationStore(
-    (state) => state.showNotification
-  );
 
   const senhaFoiPreenchida = novaSenha.length > 0 || confirmarSenha.length > 0;
   const senhaValida = !senhaFoiPreenchida || novaSenha.length > 6;
@@ -38,13 +35,19 @@ export function PerfilForm({ apelido, fotoUrl }: PerfilFormProps) {
 
   useEffect(() => {
     if (state.error) {
-      showNotification({ message: state.error, type: "error" });
+      messagePopUpFront.setMessageStore({
+        message: state.error,
+        type: "error",
+      });
     }
 
     if (state.success) {
-      showNotification({ message: state.success, type: "success" });
+      messagePopUpFront.setMessageStore({
+        message: state.success,
+        type: "success",
+      });
     }
-  }, [showNotification, state.error, state.success]);
+  }, [state.error, state.success]);
 
   function handleFotoChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -59,7 +62,7 @@ export function PerfilForm({ apelido, fotoUrl }: PerfilFormProps) {
 
       setFotoError(message);
       event.target.value = "";
-      showNotification({ message, type: "error" });
+      messagePopUpFront.setMessageStore({ message, type: "error" });
       return;
     }
 

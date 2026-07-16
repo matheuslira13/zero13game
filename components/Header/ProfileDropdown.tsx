@@ -1,17 +1,39 @@
 "use client";
 
-import { logoutFunction } from "@/app/login/actions";
+import { logoutFunction, type LogoutStateType } from "@/app/login/actions";
 import Link from "next/link";
-import { useState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Avatar } from "../Avatar/Avatar";
+import { userDataStore } from "@/mobx/store";
 
 type ProfileDropdownProps = {
   apelido: string;
   fotoUrl: string | null;
 };
 
+const initialLogoutState: LogoutStateType = {
+  error: "",
+  success: "",
+};
+
 export function ProfileDropdown({ apelido, fotoUrl }: ProfileDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+  const [logoutState, logoutAction, logoutPending] = useActionState(
+    logoutFunction,
+    initialLogoutState,
+  );
+
+  useEffect(() => {
+    if (!logoutState.success) {
+      return;
+    }
+
+    userDataStore.clearUserInfo();
+    router.replace("/");
+    router.refresh();
+  }, [logoutState.success, router]);
 
   return (
     <div className="relative">
@@ -48,14 +70,20 @@ export function ProfileDropdown({ apelido, fotoUrl }: ProfileDropdownProps) {
             Minhas inscrições
           </Link>
 
-          <form action={logoutFunction} className="border-t border-[#394c7d]">
+          <form action={logoutAction} className="border-t border-[#394c7d]">
             <button
               type="submit"
-              onClick={() => setIsOpen(false)}
+              disabled={logoutPending}
               className="block w-full px-4 py-3 text-left text-sm font-black uppercase text-[#f4c11a] hover:bg-[#001131] hover:text-white"
             >
-              Sair
+              {logoutPending ? "Saindo..." : "Sair"}
             </button>
+
+            {logoutState.error ? (
+              <p className="px-4 pb-3 text-xs font-bold text-red-300">
+                {logoutState.error}
+              </p>
+            ) : null}
           </form>
         </div>
       ) : null}

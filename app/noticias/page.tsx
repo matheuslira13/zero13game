@@ -1,10 +1,40 @@
 import { Footer, Header } from "@/components";
 import { createClient } from "@/lib/supabase/server";
+import {
+  absoluteUrl,
+  siteKeywords,
+  siteName,
+  truncateDescription,
+} from "@/lib/seo";
 import { formatDate } from "@/services/date";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 const NOTICIAS_POR_PAGINA = 20;
+
+export const metadata: Metadata = {
+  title: "Notícias gamer, comunidade e campeonatos",
+  description: truncateDescription(
+    "Últimas notícias da Zero13GameClub sobre games, jogos de luta, campeonatos, torneios, comunidade gamer e eventos na Baixada Santista.",
+  ),
+  keywords: [
+    ...siteKeywords,
+    "notícias de games",
+    "notícias de campeonatos",
+    "eventos gamer",
+  ],
+  alternates: {
+    canonical: "/noticias",
+  },
+  openGraph: {
+    title: `Notícias gamer | ${siteName}`,
+    description:
+      "Acompanhe notícias, bastidores e atualizações dos campeonatos da Zero13GameClub.",
+    url: absoluteUrl("/noticias"),
+    images: [absoluteUrl("/bgBanner.png")],
+  },
+};
 
 type NoticiasPageProps = {
   searchParams: Promise<{

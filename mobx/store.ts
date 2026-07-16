@@ -1,31 +1,60 @@
 import { makeAutoObservable } from "mobx";
 
 export type UserData = {
+  id: string;
   nome: string;
-  foto_url: string;
-  telefone: string;
+  foto_url: string | null;
+  telefone?: string | null;
   apelido: string;
-  criado_em: string;
+  criado_em?: string;
+};
+export type MessagePopUpType = {
+  message: string;
+  type: "success" | "error" | "alert";
 };
 
 export class UserDataStore {
-  userInfoDetails: UserData = {
-    nome: "",
-    foto_url: "",
-    telefone: "",
-    apelido: "",
-    criado_em: "",
-  };
+  //esse e um observavel para o mobox reagir a mudanca de estado
+  userInfo: UserData | null = null;
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {}, { autoBind: true });
   }
 
-  get userInfo() {
-    return this.userInfoDetails;
+  get getUserInfo() {
+    return this.userInfo;
   }
-  set userInfo(value: UserData) {
-    this.userInfoDetails = value;
+  //e uma acao do mobx por que e um valor calculado do mobx
+  get displayName() {
+    return this.userInfo?.apelido || this.userInfo?.nome || "Visitante";
+  }
+  // e uma action do mobx por que altera um valor de estado
+  setUserInfo(user: UserData) {
+    this.userInfo = user;
+  }
+  clearUserInfo() {
+    this.userInfo = null;
   }
 }
 
-export const tournamentStore = new UserDataStore();
+export const userDataStore = new UserDataStore();
+
+export class MessagePopUp {
+  messageStore: MessagePopUpType | null = null;
+  constructor() {
+    makeAutoObservable(this);
+  }
+  get hasMessage() {
+    return this.messageStore !== null;
+  }
+  // Action
+  setMessageStore(message: MessagePopUpType) {
+    this.messageStore = message;
+  }
+
+  // Action
+  clearMessageStore() {
+    this.messageStore = null;
+  }
+}
+
+export const messagePopUpFront = new MessagePopUp();

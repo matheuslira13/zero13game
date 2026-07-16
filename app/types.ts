@@ -1,8 +1,12 @@
 export type CampeonatoHome = {
   id: string;
   titulo: string;
+  descricao: string | null;
+  local: string;
   data_evento: string;
   numero_maximo_participantes: number;
+  tipo: "aberto" | "fechado";
+  status: "disponivel" | "indisponivel" | "finalizado" | "cancelado";
   jogos:
     | {
         nome: string;

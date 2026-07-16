@@ -4,15 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { optionsNav } from "./optionsNav";
 import { Button } from "../Button/Button";
+import { UserData } from "@/mobx/store";
 
-type Competidor = {
-  id: string;
-  nome: string;
-  apelido: string;
-  foto_url: string | null;
-} | null;
-
-export function MobileMenu({ competidor }: { competidor: Competidor }) {
+export function MobileMenu({ competidor }: { competidor: UserData | null }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

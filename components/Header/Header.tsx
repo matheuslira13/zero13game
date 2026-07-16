@@ -1,14 +1,15 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { optionsNav } from "./optionsNav";
 import { Button } from "../Button/Button";
-import { getCurrentCompetidor } from "@/lib/auth/current-user";
+import { observer } from "mobx-react-lite";
 import { MobileMenu } from "./MobileMenu";
 import { ProfileDropdown } from "./ProfileDropdown";
+import { userDataStore } from "@/mobx/store";
 
-export const Header = async () => {
-  const competidor = await getCurrentCompetidor();
-
+export const Header = observer(() => {
+  const competidor = userDataStore.userInfo;
   return (
     <header className="fixed z-50 flex w-full items-center justify-between bg-black/50 px-4 py-2">
       <Link href="/" aria-label="Voltar para a home">
@@ -56,4 +57,4 @@ export const Header = async () => {
       <MobileMenu competidor={competidor} />
     </header>
   );
-};
+});
